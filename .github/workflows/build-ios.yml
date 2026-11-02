@@ -1,0 +1,41 @@
+name: Build iPhone IPA
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: yk-iphone-build
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: macos-26
+    timeout-minutes: 15
+    steps:
+      - name: Download source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Unpack source archive when using browser upload
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ -f YK-AI-iPhone-v0.1-source.zip ]]; then
+            unzip -q YK-AI-iPhone-v0.1-source.zip
+            echo "YK_SOURCE_DIR=YK-AI-iPhone" >> "$GITHUB_ENV"
+          else
+            echo "YK_SOURCE_DIR=." >> "$GITHUB_ENV"
+          fi
+      - name: Check core logic and build unsigned iPhone app
+        shell: bash
+        run: bash "$YK_SOURCE_DIR/scripts/build-unsigned-ipa.sh"
+      - name: Save IPA for AltStore
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: YK-AI-iPhone-unsigned
+          path: ${{ env.YK_SOURCE_DIR }}/dist/*
+          if-no-files-found: error
+          retention-days: 1
