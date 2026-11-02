@@ -38,7 +38,7 @@ AIの自然さ・画像認識の正確さ・実際の徒歩ナビは実機での
 GitHubのリポジトリ直下に YK-AI-iPhone-v0.1-source.zip を置き、
 同梱の .github/workflows/build-ios.yml をリポジトリ直下の同じパスに置きます。
 Actions → Build iPhone IPA → Run workflow で手動実行します。
-標準 macos-26 ランナーを使い、1件ずつ・最大30分で実行します。
+標準 macos-26 ランナーを使い、1件ずつ・最大45分で実行します。
 ビルドには基本ロジック、シミュレーター、音声、UIの検証を含みます。
 成功時の未署名IPAと検証結果はArtifactsに1日間保存されます。
 
